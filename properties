@@ -1,0 +1,98 @@
+application.properties
+
+
+//primary
+ucube.artemis[0].host 
+ucube.artemis[0].username
+ucube.artemis[0].password
+ucube.artemis[0].consoleUrl
+
+//mirror
+ucube.artemis[1].url
+ucube.artemis[1].username
+ucube.artemis[1].password
+ucube.artemis[1].consoleUrl
+
+//jolokia Endpoint
+ucube.jolokia.Version
+ucube.jolokia.Hapolicy
+ucube.jolokia.Started
+
+//alert
+ucube.alert.RulePath
+
+
+
+
+@Data
+@Component
+@ConfigurationProperties(prefix = "ucube")
+public class UcubeProperties {
+    private List<Artemis> artemis
+    private Jolokia jolokia;
+    private String alertRulePath;
+
+    @Data
+    public static class Artemis {
+        private String host;
+        private String username;
+        private String password;
+        private String consoleUrl;
+    }
+
+    @Data
+    public static class Jolokia {
+        private String version;
+        private String hapolicy;
+        private boolean started;
+    }
+}
+
+
+
+
+
+
+@Service
+public class ArtemisService {
+    private final UcubeProperties ucubeProperties;
+
+    public ArtemisService(UcubeProperties ucubeProperties) {
+        this.ucubeProperties = ucubeProperties;
+    }
+
+    public void connectToPrimaryArtemis() {
+        ArtemisProperties.Artemis primaryArtemis = artemisProperties.getArtemis().get(0);
+        String host = primaryArtemis.getHost();
+        String username = primaryArtemis.getUsername();
+        String password = primaryArtemis.getPassword();
+        String consoleUrl = primaryArtemis.getConsoleUrl();
+
+        // Primary Artemis 브로커에 연결하는 로직
+        System.out.println("Connecting to primary Artemis broker...");
+        System.out.println("Host: " + host);
+        System.out.println("Username: " + username);
+        System.out.println("Password: " + password);
+        System.out.println("Console URL: " + consoleUrl);
+    }
+
+    public void connectToMirrorArtemis() {
+        ArtemisProperties.Artemis mirrorArtemis = artemisProperties.getArtemis().get(1);
+        String host = mirrorArtemis.getHost();
+        String username = mirrorArtemis.getUsername();
+        String password = mirrorArtemis.getPassword();
+        String consoleUrl = mirrorArtemis.getConsoleUrl();
+
+        // Mirror Artemis 브로커에 연결하는 로직
+        System.out.println("Connecting to mirror Artemis broker...");
+        System.out.println("Host: " + host);
+        System.out.println("Username: " + username);
+        System.out.println("Password: " + password);
+        System.out.println("Console URL: " + consoleUrl);
+    }
+}
+
+
+        String version = ucubeProperties.getJolokia().getVersion();
+        String hapolicy = ucubeProperties.getJolokia().getHapolicy();
+        boolean started = ucubeProperties.getJolokia().isStarted();
